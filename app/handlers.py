@@ -16,20 +16,18 @@ class Registration(StatesGroup):
 class Model(StatesGroup):
     evaluation = State()
 
+
 @router.message(CommandStart())
-async def bot_start(message: Message):
+async def bot_start(message: Message, state: FSMContext):
     await req.set_user(message.from_user.id)
     await message.answer('Bot is ON!', reply_markup = kb.start_buttons)
+
 
 @router.message(Command('help'))
 async def bot_help(message: Message):
     await message.answer('This is bot for NLP messages!\n If you want to start analise text - press button "Analysis"', 
                          reply_markup = kb.analysis_button)
 
-@router.message()
-async def bot_anyother(message: Message):
-    await message.answer('This is bot for NLP messages!\n If you want to start analise text - press button "Analysis"\nYou can also ask for help - press "/help"', 
-                         reply_markup = kb.start_buttons)
 
 @router.callback_query(F.data == "exit")
 async def callback_exit(callback: CallbackQuery, state: FSMContext):
